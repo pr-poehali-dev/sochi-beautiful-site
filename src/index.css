@@ -2,100 +2,1211 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Golos+Text:wght@400;500;600&display=swap");
+
 @layer base {
   :root {
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
-
     --card: 0 0% 100%;
     --card-foreground: 222.2 84% 4.9%;
-
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
-
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-
+    --primary: 210 100% 50%;
+    --primary-foreground: 0 0% 100%;
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
-
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
-
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-
+    --accent: 25 100% 55%;
+    --accent-foreground: 0 0% 100%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
-
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --ring: 210 100% 50%;
+    --radius: 1rem;
 
-    --radius: 0.5rem;
-
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sochi-sea: #0077b6;
+    --sochi-sky: #00b4d8;
+    --sochi-sunset: #f77f00;
+    --sochi-sand: #f4a261;
+    --sochi-green: #2d9e2d;
+    --sochi-dark: #0a1628;
+    --sochi-light: #f0f8ff;
   }
 
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+  * {
+    @apply border-border;
+    box-sizing: border-box;
+  }
+  body {
+    font-family: "Golos Text", sans-serif;
+    background: var(--sochi-dark);
+    color: #fff;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
   }
 }
 
-@layer base {
-  * {
-    @apply border-border;
-  }
+/* =================== NAVBAR =================== */
+.sochi-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.2rem 2.5rem;
+  transition: all 0.35s ease;
+}
+.sochi-nav--scrolled {
+  background: rgba(10, 22, 40, 0.92);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(0, 180, 216, 0.15);
+  padding: 0.8rem 2.5rem;
+  box-shadow: 0 4px 30px rgba(0, 119, 182, 0.15);
+}
+.sochi-nav__logo {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  font-family: "Montserrat", sans-serif;
+}
+.sochi-nav__logo-text {
+  font-size: 1.5rem;
+  font-weight: 900;
+  letter-spacing: 4px;
+  background: linear-gradient(135deg, #00b4d8, #f77f00);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.sochi-nav__logo-dot {
+  color: var(--sochi-sunset);
+  font-size: 0.6rem;
+  align-self: flex-start;
+  margin-top: 4px;
+}
+.sochi-nav__links {
+  display: flex;
+  gap: 0.3rem;
+}
+.sochi-nav__link {
+  padding: 0.4rem 0.9rem;
+  border-radius: 2rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.75);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: "Golos Text", sans-serif;
+}
+.sochi-nav__link:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+}
+.sochi-nav__link--active {
+  color: #fff;
+  background: rgba(0, 180, 216, 0.2);
+  color: var(--sochi-sky);
+}
+.sochi-nav__burger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+}
+.sochi-nav__burger span {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: #fff;
+  border-radius: 2px;
+  transition: 0.3s;
+}
 
-  body {
-    @apply bg-background text-foreground;
+@media (max-width: 768px) {
+  .sochi-nav__burger {
+    display: flex;
   }
+  .sochi-nav__links {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: rgba(10, 22, 40, 0.97);
+    flex-direction: column;
+    padding: 1rem;
+    gap: 0.5rem;
+    border-bottom: 1px solid rgba(0, 180, 216, 0.2);
+  }
+  .sochi-nav__links--open {
+    display: flex;
+  }
+  .sochi-nav {
+    padding: 1rem 1.5rem;
+  }
+}
+
+/* =================== GUIDE GIRL =================== */
+.guide {
+  position: fixed;
+  bottom: 2rem;
+  right: 1.5rem;
+  z-index: 99;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  transition: transform 0.3s ease;
+}
+.guide--pop {
+  animation: guidePop 0.5s ease;
+}
+@keyframes guidePop {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.12) translateY(-6px);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.guide__bubble {
+  position: relative;
+  background: white;
+  color: #0a1628;
+  padding: 0.8rem 1rem;
+  border-radius: 14px 14px 4px 14px;
+  max-width: 200px;
+  font-size: 0.75rem;
+  line-height: 1.4;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+  margin-bottom: 8px;
+  font-family: "Golos Text", sans-serif;
+}
+.guide__bubble::after {
+  content: "";
+  position: absolute;
+  bottom: -8px;
+  right: 18px;
+  border: 8px solid transparent;
+  border-top-color: white;
+  border-bottom: 0;
+}
+.guide__figure {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: default;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.4));
+}
+.guide__head {
+  width: 44px;
+  height: 44px;
+  position: relative;
+}
+.guide__face {
+  width: 44px;
+  height: 44px;
+  background: linear-gradient(135deg, #fddbb4, #f4a261);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  animation: headBob 3s ease-in-out infinite;
+}
+@keyframes headBob {
+  0%,
+  100% {
+    transform: rotate(-3deg);
+  }
+  50% {
+    transform: rotate(3deg);
+  }
+}
+.guide__hair {
+  position: absolute;
+  top: -4px;
+  left: 4px;
+  right: 4px;
+  height: 20px;
+  background: linear-gradient(135deg, #8b4513, #6b3a2a);
+  border-radius: 50% 50% 0 0;
+}
+.guide__body {
+  display: flex;
+  align-items: center;
+  margin-top: 2px;
+}
+.guide__torso {
+  width: 34px;
+  height: 38px;
+  background: linear-gradient(135deg, #0077b6, #00b4d8);
+  border-radius: 6px 6px 2px 2px;
+}
+.guide__arm {
+  width: 10px;
+  height: 28px;
+  background: linear-gradient(135deg, #fddbb4, #f4a261);
+  border-radius: 5px;
+  animation: armSwing 1.5s ease-in-out infinite alternate;
+}
+.guide__arm--left {
+  transform-origin: top center;
+  animation-name: armSwingLeft;
+}
+.guide__arm--right {
+  transform-origin: top center;
+  animation-name: armSwingRight;
+}
+@keyframes armSwingLeft {
+  0% {
+    transform: rotate(-15deg);
+  }
+  100% {
+    transform: rotate(15deg);
+  }
+}
+@keyframes armSwingRight {
+  0% {
+    transform: rotate(15deg);
+  }
+  100% {
+    transform: rotate(-15deg);
+  }
+}
+.guide__legs {
+  display: flex;
+  gap: 4px;
+  margin-top: 2px;
+}
+.guide__leg {
+  width: 14px;
+  height: 28px;
+  background: linear-gradient(135deg, #1a1a2e, #2d2d5e);
+  border-radius: 3px 3px 5px 5px;
+  animation: legWalk 1s ease-in-out infinite alternate;
+}
+.guide__leg:nth-child(2) {
+  animation-direction: alternate-reverse;
+}
+@keyframes legWalk {
+  0% {
+    transform: rotate(-8deg);
+  }
+  100% {
+    transform: rotate(8deg);
+  }
+}
+.guide__close {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 20px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+.guide__reopen {
+  position: fixed;
+  bottom: 2rem;
+  right: 1.5rem;
+  z-index: 99;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--sochi-sea), var(--sochi-sky));
+  border: none;
+  cursor: pointer;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 20px rgba(0, 119, 182, 0.5);
+  transition: transform 0.2s;
+}
+.guide__reopen:hover {
+  transform: scale(1.1);
+}
+
+/* =================== HERO =================== */
+.hero {
+  position: relative;
+  height: 100vh;
+  min-height: 600px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.hero__bg {
+  position: absolute;
+  inset: -20%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  will-change: transform;
+}
+.hero__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(10, 22, 40, 0.3) 0%,
+    rgba(10, 22, 40, 0.5) 50%,
+    rgba(10, 22, 40, 0.85) 100%
+  );
+}
+.hero__content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  max-width: 800px;
+  padding: 0 1.5rem;
+  animation: fadeInUp 1s ease both;
+}
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.hero__badge {
+  display: inline-block;
+  padding: 0.35rem 1.2rem;
+  background: rgba(0, 180, 216, 0.2);
+  border: 1px solid rgba(0, 180, 216, 0.4);
+  border-radius: 2rem;
+  font-size: 0.8rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--sochi-sky);
+  margin-bottom: 1.5rem;
+  font-family: "Montserrat", sans-serif;
+}
+.hero__title {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 900;
+  font-size: clamp(3.5rem, 10vw, 8rem);
+  line-height: 0.95;
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.hero__title-line {
+  color: #fff;
+}
+.hero__title-line--accent {
+  background: linear-gradient(135deg, #00b4d8, #f77f00, #f4a261);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero__subtitle {
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 2.5rem;
+  font-weight: 400;
+}
+.hero__buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.hero__scroll-hint {
+  position: absolute;
+  bottom: 6rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.75rem;
+  cursor: pointer;
+  animation: bounce 2s ease infinite;
+}
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateX(-50%) translateY(0);
+  }
+  50% {
+    transform: translateX(-50%) translateY(8px);
+  }
+}
+.hero__stats {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  gap: 0;
+}
+.hero__stat {
+  flex: 1;
+  max-width: 200px;
+  text-align: center;
+  padding: 1.2rem 1rem;
+  background: rgba(10, 22, 40, 0.7);
+  backdrop-filter: blur(10px);
+  border-top: 2px solid rgba(0, 180, 216, 0.3);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.hero__stat-num {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 800;
+  font-size: 1.6rem;
+  background: linear-gradient(135deg, #00b4d8, #f77f00);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero__stat span:last-child {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* =================== BUTTONS =================== */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.85rem 2rem;
+  background: linear-gradient(135deg, var(--sochi-sea), var(--sochi-sky));
+  color: #fff;
+  font-weight: 700;
+  border-radius: 3rem;
+  border: none;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: all 0.25s;
+  font-family: "Montserrat", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 4px 20px rgba(0, 119, 182, 0.4);
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(0, 119, 182, 0.5);
+}
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.85rem 2rem;
+  background: transparent;
+  color: #fff;
+  font-weight: 700;
+  border-radius: 3rem;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: all 0.25s;
+  font-family: "Montserrat", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.btn-outline:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.7);
+  transform: translateY(-2px);
+}
+
+/* =================== SECTIONS =================== */
+.section {
+  padding: 6rem 0;
+  position: relative;
+}
+.section--history {
+  background: linear-gradient(180deg, #0a1628 0%, #0d1f3c 100%);
+}
+.section--hotels {
+  background: linear-gradient(180deg, #0d1f3c 0%, #0a1628 100%);
+}
+.section--attractions {
+  background: linear-gradient(180deg, #0a1628 0%, #0d2035 100%);
+}
+.section--weather {
+  background: linear-gradient(135deg, #0a1628 0%, #0c1f45 50%, #0a1628 100%);
+}
+.section--contacts {
+  background: linear-gradient(180deg, #0d1f3c 0%, #050e1c 100%);
+}
+
+.section__container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+.section__header {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+.section__tag {
+  display: inline-block;
+  padding: 0.3rem 1rem;
+  background: rgba(0, 180, 216, 0.15);
+  border: 1px solid rgba(0, 180, 216, 0.3);
+  border-radius: 2rem;
+  font-size: 0.78rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--sochi-sky);
+  margin-bottom: 1rem;
+  font-family: "Montserrat", sans-serif;
+}
+.section__title {
+  font-family: "Montserrat", sans-serif;
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 0.8rem;
+}
+.section__subtitle {
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 1.05rem;
+}
+
+/* =================== HISTORY =================== */
+.history__timeline {
+  position: relative;
+  max-width: 800px;
+  margin: 0 auto 4rem;
+}
+.history__timeline::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(180deg, var(--sochi-sea), var(--sochi-sunset));
+  transform: translateX(-50%);
+}
+.history__item {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  margin-bottom: 2rem;
+  position: relative;
+}
+.history__item--left {
+  flex-direction: row;
+}
+.history__item--right {
+  flex-direction: row-reverse;
+}
+.history__year {
+  flex: 1;
+  text-align: right;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 800;
+  font-size: 1.4rem;
+  background: linear-gradient(135deg, var(--sochi-sky), var(--sochi-sunset));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.history__item--right .history__year {
+  text-align: left;
+}
+.history__dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--sochi-sky), var(--sochi-sunset));
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 0 0 4px rgba(0, 180, 216, 0.2);
+}
+.history__card {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.5;
+  backdrop-filter: blur(4px);
+}
+.history__extra {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+.history__extra-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(0, 180, 216, 0.15);
+  border-radius: 16px;
+  padding: 2rem;
+  text-align: center;
+  transition:
+    transform 0.25s,
+    border-color 0.25s;
+}
+.history__extra-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(0, 180, 216, 0.4);
+}
+.history__extra-icon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+.history__extra-card h3 {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: #fff;
+  margin-bottom: 0.5rem;
+}
+.history__extra-card p {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+@media (max-width: 640px) {
+  .history__timeline::before {
+    left: 16px;
+  }
+  .history__item,
+  .history__item--right {
+    flex-direction: column;
+    align-items: flex-start;
+    padding-left: 2.5rem;
+  }
+  .history__dot {
+    position: absolute;
+    left: 8px;
+  }
+  .history__year,
+  .history__item--right .history__year {
+    text-align: left;
+    flex: none;
+  }
+}
+
+/* =================== HOTELS =================== */
+.hotels__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+.hotel-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  overflow: hidden;
+  transition:
+    transform 0.3s,
+    box-shadow 0.3s;
+}
+.hotel-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 50px rgba(0, 119, 182, 0.25);
+}
+.hotel-card__img-wrap {
+  position: relative;
+  height: 200px;
+  overflow: hidden;
+}
+.hotel-card__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s;
+}
+.hotel-card:hover .hotel-card__img {
+  transform: scale(1.08);
+}
+.hotel-card__tag {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: linear-gradient(135deg, var(--sochi-sea), var(--sochi-sky));
+  color: #fff;
+  padding: 0.25rem 0.75rem;
+  border-radius: 2rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  font-family: "Montserrat", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.hotel-card__body {
+  padding: 1.5rem;
+}
+.hotel-card__stars {
+  color: #f4a261;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+.hotel-card__name {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #fff;
+  margin-bottom: 0.5rem;
+}
+.hotel-card__desc {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.85rem;
+  line-height: 1.5;
+  margin-bottom: 1.2rem;
+}
+.hotel-card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.hotel-card__price {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+  color: var(--sochi-sky);
+  font-size: 0.9rem;
+}
+.hotel-card__btn {
+  padding: 0.45rem 1.1rem;
+  background: rgba(0, 180, 216, 0.15);
+  border: 1px solid rgba(0, 180, 216, 0.3);
+  border-radius: 2rem;
+  color: var(--sochi-sky);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: "Montserrat", sans-serif;
+}
+.hotel-card__btn:hover {
+  background: rgba(0, 180, 216, 0.3);
+  border-color: var(--sochi-sky);
+}
+
+/* =================== ATTRACTIONS =================== */
+.attractions__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+.attraction-card {
+  border-radius: 20px;
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s;
+  cursor: default;
+}
+.attraction-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: inherit;
+}
+.attraction-card:hover {
+  transform: translateY(-4px) scale(1.02);
+}
+.attraction-card__emoji {
+  font-size: 2.5rem;
+  display: block;
+  margin-bottom: 1rem;
+  position: relative;
+  z-index: 1;
+}
+.attraction-card__name {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 800;
+  font-size: 1.15rem;
+  color: #fff;
+  margin-bottom: 0.6rem;
+  position: relative;
+  z-index: 1;
+}
+.attraction-card__desc {
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 0.88rem;
+  line-height: 1.5;
+  position: relative;
+  z-index: 1;
+}
+.attractions__banner {
+  border-radius: 24px;
+  overflow: hidden;
+  position: relative;
+  height: 320px;
+  display: flex;
+  align-items: flex-end;
+}
+.attractions__banner-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.attractions__banner-content {
+  position: relative;
+  z-index: 2;
+  padding: 2.5rem;
+  background: linear-gradient(
+    90deg,
+    rgba(10, 22, 40, 0.9) 0%,
+    transparent 100%
+  );
+  width: 100%;
+}
+.attractions__banner-content h3 {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 800;
+  font-size: 2rem;
+  color: #fff;
+  margin-bottom: 0.5rem;
+}
+.attractions__banner-content p {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.9rem;
+  max-width: 500px;
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+
+/* =================== WEATHER =================== */
+.weather__card {
+  max-width: 600px;
+  margin: 0 auto 3rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(0, 180, 216, 0.2);
+  border-radius: 24px;
+  padding: 3rem;
+  text-align: center;
+  backdrop-filter: blur(8px);
+}
+.weather__loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+.weather__spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(0, 180, 216, 0.2);
+  border-top-color: var(--sochi-sky);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.weather__data {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+.weather__main {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+.weather__emoji {
+  font-size: 4rem;
+}
+.weather__temp-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.weather__temp {
+  font-family: "Montserrat", sans-serif;
+  font-size: 4rem;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1;
+}
+.weather__desc {
+  color: var(--sochi-sky);
+  font-size: 1rem;
+  text-transform: capitalize;
+}
+.weather__details {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.weather__detail {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+}
+.weather__mock-note {
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 0.75rem;
+  font-style: italic;
+}
+.weather__refresh {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 1.2rem;
+  background: rgba(0, 180, 216, 0.1);
+  border: 1px solid rgba(0, 180, 216, 0.25);
+  border-radius: 2rem;
+  color: var(--sochi-sky);
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: "Golos Text", sans-serif;
+}
+.weather__refresh:hover {
+  background: rgba(0, 180, 216, 0.2);
+}
+.weather__seasons {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+.weather__season {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 1.5rem 1rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  transition:
+    border-color 0.25s,
+    transform 0.25s;
+}
+.weather__season:hover {
+  border-color: rgba(0, 180, 216, 0.3);
+  transform: translateY(-3px);
+}
+.weather__season-icon {
+  font-size: 2rem;
+}
+.weather__season-name {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #fff;
+}
+.weather__season-temp {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 800;
+  font-size: 1.3rem;
+  background: linear-gradient(135deg, var(--sochi-sky), var(--sochi-sunset));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.weather__season-desc {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.75rem;
+  line-height: 1.4;
+}
+
+@media (max-width: 640px) {
+  .weather__seasons {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* =================== CONTACTS =================== */
+.contacts__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: start;
+}
+@media (max-width: 768px) {
+  .contacts__grid {
+    grid-template-columns: 1fr;
+  }
+}
+.contacts__info {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+.contact-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.2rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  transition: border-color 0.25s;
+}
+.contact-item:hover {
+  border-color: rgba(0, 180, 216, 0.3);
+}
+.contact-item__icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: linear-gradient(
+    135deg,
+    rgba(0, 119, 182, 0.3),
+    rgba(0, 180, 216, 0.3)
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--sochi-sky);
+  flex-shrink: 0;
+}
+.contact-item h4 {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 0.25rem;
+}
+.contact-item p {
+  color: #fff;
+  font-size: 0.95rem;
+}
+.contacts__form {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.contacts__form h3 {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+  font-size: 1.3rem;
+  color: #fff;
+  margin-bottom: 0.5rem;
+}
+.contacts__input,
+.contacts__textarea {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  padding: 0.85rem 1rem;
+  color: #fff;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.2s;
+  font-family: "Golos Text", sans-serif;
+  resize: vertical;
+}
+.contacts__input::placeholder,
+.contacts__textarea::placeholder {
+  color: rgba(255, 255, 255, 0.35);
+}
+.contacts__input:focus,
+.contacts__textarea:focus {
+  border-color: rgba(0, 180, 216, 0.5);
+}
+
+/* =================== FOOTER =================== */
+.footer {
+  background: #050e1c;
+  border-top: 1px solid rgba(0, 180, 216, 0.15);
+  padding: 3rem 2rem;
+}
+.footer__content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  text-align: center;
+}
+.footer__logo {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 900;
+  font-size: 1.8rem;
+  letter-spacing: 4px;
+  background: linear-gradient(135deg, #00b4d8, #f77f00);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.footer__copy {
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 0.82rem;
+}
+.footer__links {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.footer__link {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 0.82rem;
+  cursor: pointer;
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  transition: color 0.2s;
+  font-family: "Golos Text", sans-serif;
+}
+.footer__link:hover {
+  color: var(--sochi-sky);
 }

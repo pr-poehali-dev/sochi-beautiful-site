@@ -1,0 +1,12 @@
+{
+  "tests": [
+    {
+      "name": "Get Sochi weather",
+      "method": "GET",
+      "path": "/",
+      "expectedStatus": 200,
+      "expectedBody": {"city": "Сочи"},
+      "bodyMatcher": "partial"
+    }
+  ]
+}
