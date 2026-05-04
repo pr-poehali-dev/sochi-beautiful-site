@@ -134,7 +134,7 @@ export default function Index() {
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [weatherLoading, setWeatherLoading] = useState(false);
   const [guideVisible, setGuideVisible] = useState(true);
-  const [guidePop, setGuidePop] = useState(false);
+  const [guideKey, setGuideKey] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrollY, setScrollY] = useState(0);
   const [contactForm, setContactForm] = useState({ name: "", email: "", message: "" });
