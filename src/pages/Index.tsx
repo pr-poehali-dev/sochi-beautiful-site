@@ -1,174 +1,87 @@
 import { useState, useEffect, useRef } from "react";
 import Icon from "@/components/ui/icon";
+// v3 — guide removed, redesigned
 
 const WEATHER_URL = "https://functions.poehali.dev/549ae944-06e3-4a12-a60d-d0bdfa0deec9";
-
 const HERO_IMG = "https://cdn.poehali.dev/projects/3dbd131e-1785-4a18-85a0-ece76d10b787/files/5d281416-9da2-4d27-b4e0-ffa501274947.jpg";
 const HOTEL_IMG = "https://cdn.poehali.dev/projects/3dbd131e-1785-4a18-85a0-ece76d10b787/files/429e716b-4d04-4ad2-9607-5e4664a9002a.jpg";
 const MOUNTAIN_IMG = "https://cdn.poehali.dev/projects/3dbd131e-1785-4a18-85a0-ece76d10b787/files/1808fd80-6f68-4838-95d2-cf4114bbe1dd.jpg";
 
 const sections = ["home", "history", "hotels", "attractions", "weather", "contacts"];
 const sectionLabels: Record<string, string> = {
-  home: "Главная",
-  history: "История",
-  hotels: "Отели",
-  attractions: "Достопримечательности",
-  weather: "Погода",
-  contacts: "Контакты",
-};
-
-const guideMessages: Record<string, string> = {
-  home: "Привет! Я Соня — твой гид по Сочи! Добро пожаловать в жемчужину Черноморского побережья 🌊",
-  history: "Сочи — город с богатой историей! Позволь рассказать тебе, как этот курорт стал одним из главных в России 📜",
-  hotels: "Здесь лучшие отели Сочи! От уютных бутик-отелей до роскошных пятизвёздочных курортов ✨",
-  attractions: "Ох, сколько всего интересного! Горы, море, парки — Сочи удивит каждого туриста 🏔️",
-  weather: "Посмотрим, какая погода в Сочи сейчас! Здесь почти всегда тепло и солнечно ☀️",
-  contacts: "Остались вопросы? С удовольствием помогу! Пиши, звони — всегда на связи 💌",
+  home: "Главная", history: "История", hotels: "Отели",
+  attractions: "Места", weather: "Погода", contacts: "Контакты",
 };
 
 interface WeatherData {
-  temp: number;
-  feels_like: number;
-  humidity: number;
-  wind_speed: number;
-  description: string;
-  icon: string;
-  city: string;
-  mock?: boolean;
+  temp: number; feels_like: number; humidity: number;
+  wind_speed: number; description: string; icon: string; city: string; mock?: boolean;
 }
 
-const hotels = [
-  {
-    name: "Radisson Blu Resort",
-    stars: 5,
-    desc: "Роскошный курорт прямо на берегу Чёрного моря с панорамными видами и бассейнами",
-    price: "от 12 000 ₽/ночь",
-    img: HOTEL_IMG,
-    tag: "Топ выбор",
-  },
-  {
-    name: "Горки Город",
-    stars: 5,
-    desc: "Олимпийский горный курорт с прямым доступом к горнолыжным трассам Розы Хутор",
-    price: "от 9 500 ₽/ночь",
-    img: MOUNTAIN_IMG,
-    tag: "Горный курорт",
-  },
-  {
-    name: "Pullman Сочи Центр",
-    stars: 5,
-    desc: "Современный отель в историческом центре Сочи, в 5 минутах от набережной",
-    price: "от 7 200 ₽/ночь",
-    img: HOTEL_IMG,
-    tag: "В центре",
-  },
-  {
-    name: "Mercure Сочи Центр",
-    stars: 4,
-    desc: "Стильный отель с превосходным видом на море и развитой инфраструктурой",
-    price: "от 4 800 ₽/ночь",
-    img: HOTEL_IMG,
-    tag: "Лучшая цена",
-  },
+const hotelsList = [
+  { name: "Radisson Blu Resort", stars: 5, desc: "Роскошный курорт прямо на берегу Чёрного моря с панорамными видами и бассейнами", price: "от 12 000 ₽", img: HOTEL_IMG, tag: "Топ выбор" },
+  { name: "Горки Город", stars: 5, desc: "Олимпийский горный курорт с прямым доступом к горнолыжным трассам Розы Хутор", price: "от 9 500 ₽", img: MOUNTAIN_IMG, tag: "Горный курорт" },
+  { name: "Pullman Сочи Центр", stars: 5, desc: "Современный отель в историческом центре Сочи, в 5 минутах от набережной", price: "от 7 200 ₽", img: HOTEL_IMG, tag: "В центре" },
+  { name: "Mercure Сочи Центр", stars: 4, desc: "Стильный отель с превосходным видом на море и развитой инфраструктурой", price: "от 4 800 ₽", img: HOTEL_IMG, tag: "Лучшая цена" },
 ];
 
-const attractions = [
-  {
-    name: "Роза Хутор",
-    emoji: "🏔️",
-    desc: "Горнолыжный курорт мирового уровня. Летом — трекинг и канатные дороги, зимой — первоклассные трассы.",
-    color: "from-blue-500 to-cyan-400",
-  },
-  {
-    name: "Сочинский Дендрарий",
-    emoji: "🌿",
-    desc: "Уникальный парк с более чем 1800 видами растений со всего мира. Настоящий ботанический рай.",
-    color: "from-green-500 to-emerald-400",
-  },
-  {
-    name: "Олимпийский Парк",
-    emoji: "🏟️",
-    desc: "Наследие Олимпиады-2014. Стадионы, арены и знаменитый фонтан «Сочи» — шоу каждый вечер.",
-    color: "from-orange-500 to-amber-400",
-  },
-  {
-    name: "Ривьера",
-    emoji: "🎡",
-    desc: "Старейший парк Сочи на берегу моря. Аттракционы, концерты и великолепный пляж.",
-    color: "from-pink-500 to-rose-400",
-  },
-  {
-    name: "Агурские водопады",
-    emoji: "💧",
-    desc: "Каскад из трёх живописных водопадов в Хостинском ущелье. Незабываемый трекинг по горной тропе.",
-    color: "from-teal-500 to-blue-400",
-  },
-  {
-    name: "Мацеста",
-    emoji: "♨️",
-    desc: "Знаменитые сероводородные ванны, целебные источники которых известны с XIX века. Здоровье и восстановление.",
-    color: "from-violet-500 to-purple-400",
-  },
+const attractionsList = [
+  { name: "Роза Хутор", emoji: "🏔️", desc: "Горнолыжный курорт мирового уровня. 102 км трасс, перепад высот 1760 м. Работает круглогодично.", grad: "linear-gradient(135deg,#0077b6,#00b4d8)" },
+  { name: "Сочинский Дендрарий", emoji: "🌿", desc: "Парк с более чем 1800 видами растений со всего мира на склонах Кавказского хребта.", grad: "linear-gradient(135deg,#1b4332,#40916c)" },
+  { name: "Олимпийский Парк", emoji: "🏟️", desc: "Наследие Олимпиады‑2014. Стадионы, арены и фонтан «Сочи» — шоу каждый вечер.", grad: "linear-gradient(135deg,#b5451b,#f77f00)" },
+  { name: "Ривьера", emoji: "🎡", desc: "Старейший парк города на берегу моря. Аттракционы, концерты и великолепный пляж.", grad: "linear-gradient(135deg,#7b2d8b,#c77dff)" },
+  { name: "Агурские водопады", emoji: "💧", desc: "Каскад из трёх живописных водопадов в Хостинском ущелье. Незабываемый трекинг.", grad: "linear-gradient(135deg,#023e8a,#48cae4)" },
+  { name: "Мацеста", emoji: "♨️", desc: "Знаменитые сероводородные источники, известные с XIX века. Здоровье и восстановление.", grad: "linear-gradient(135deg,#6a0572,#e040fb)" },
 ];
 
-const historyFacts = [
-  { year: "1838", event: "Основание Форта Александрия — начало истории Сочи как русского поселения на Черноморском побережье" },
-  { year: "1896", event: "Сочи получает статус города и начинает развиваться как курортный центр Российской империи" },
-  { year: "1934", event: "Сочи объявлен всесоюзной здравницей — здесь строятся грандиозные санатории сталинской эпохи" },
-  { year: "1961", event: "Открытие Сочинского дендрария и активное озеленение города, формирующее его уникальный облик" },
-  { year: "2014", event: "XXII Зимние Олимпийские игры превращают Сочи в мировой курорт с инфраструктурой высшего класса" },
+const historyList = [
+  { year: "1838", label: "Основание", event: "Основание Форта Александрия — начало истории Сочи как русского поселения на Черноморском побережье" },
+  { year: "1896", label: "Статус города", event: "Сочи получает статус города и начинает развиваться как курортный центр Российской империи" },
+  { year: "1934", label: "Всесоюзная здравница", event: "Сочи объявлен всесоюзной здравницей — строятся грандиозные санатории сталинской эпохи" },
+  { year: "1961", label: "Дендрарий", event: "Открытие Сочинского дендрария и активное озеленение города, формирующее его уникальный облик" },
+  { year: "2014", label: "Олимпиада", event: "XXII Зимние Олимпийские игры превращают Сочи в мировой курорт с инфраструктурой высшего класса" },
 ];
 
 const weatherIconsMap: Record<string, string> = {
   "01": "☀️", "02": "⛅", "03": "☁️", "04": "☁️",
   "09": "🌧️", "10": "🌦️", "11": "⛈️", "13": "❄️", "50": "🌫️",
 };
-
-function getWeatherEmoji(icon: string): string {
-  const code = icon.slice(0, 2);
-  return weatherIconsMap[code] || "🌤️";
-}
+function getWeatherEmoji(icon: string) { return weatherIconsMap[icon.slice(0, 2)] || "🌤️"; }
 
 export default function Index() {
   const [activeSection, setActiveSection] = useState("home");
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [weatherLoading, setWeatherLoading] = useState(false);
-  const [guideVisible, setGuideVisible] = useState(true);
-  const [guideKey, setGuideKey] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrollY, setScrollY] = useState(0);
   const [contactForm, setContactForm] = useState({ name: "", email: "", message: "" });
+  const [sent, setSent] = useState(false);
   const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
 
   useEffect(() => {
-    const handleScroll = () => {
+    const onScroll = () => {
       setScrollY(window.scrollY);
-      const current = sections.find((s) => {
+      const cur = sections.find(s => {
         const el = sectionRefs.current[s];
         if (!el) return false;
-        const rect = el.getBoundingClientRect();
-        return rect.top <= 120 && rect.bottom > 120;
+        const r = el.getBoundingClientRect();
+        return r.top <= 100 && r.bottom > 100;
       });
-      if (current && current !== activeSection) {
-        setActiveSection(current);
-        setGuidePop(true);
-        setTimeout(() => setGuidePop(false), 600);
-      }
+      if (cur) setActiveSection(cur);
     };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [activeSection]);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   useEffect(() => {
-    if (activeSection === "weather" && !weather) {
-      fetchWeather();
-    }
+    if (activeSection === "weather" && !weather && !weatherLoading) fetchWeather();
   }, [activeSection]);
 
   const fetchWeather = async () => {
     setWeatherLoading(true);
     try {
       const res = await fetch(WEATHER_URL);
+      if (!res.ok) throw new Error("bad response");
       const data = await res.json();
       setWeather(data);
     } catch {
@@ -183,171 +96,137 @@ export default function Index() {
     setMenuOpen(false);
   };
 
+  const handleSend = (e: React.FormEvent) => {
+    e.preventDefault();
+    setSent(true);
+    setTimeout(() => setSent(false), 4000);
+    setContactForm({ name: "", email: "", message: "" });
+  };
+
   return (
-    <div className="sochi-app">
-      {/* NAVBAR */}
-      <nav className={`sochi-nav ${scrollY > 60 ? "sochi-nav--scrolled" : ""}`}>
-        <div className="sochi-nav__logo" onClick={() => scrollTo("home")}>
-          <span className="sochi-nav__logo-text">СОЧИ</span>
-          <span className="sochi-nav__logo-dot">●</span>
-        </div>
-        <div className={`sochi-nav__links ${menuOpen ? "sochi-nav__links--open" : ""}`}>
-          {sections.map((s) => (
-            <button
-              key={s}
-              onClick={() => scrollTo(s)}
-              className={`sochi-nav__link ${activeSection === s ? "sochi-nav__link--active" : ""}`}
-            >
+    <div className="app">
+
+      {/* ── NAV ── */}
+      <nav className={`nav ${scrollY > 50 ? "nav--solid" : ""}`}>
+        <button className="nav__logo" onClick={() => scrollTo("home")}>
+          <span>СОЧИ</span><span className="nav__logo-wave">〰</span>
+        </button>
+        <div className={`nav__links ${menuOpen ? "open" : ""}`}>
+          {sections.map(s => (
+            <button key={s} onClick={() => scrollTo(s)}
+              className={`nav__link ${activeSection === s ? "active" : ""}`}>
               {sectionLabels[s]}
             </button>
           ))}
         </div>
-        <button className="sochi-nav__burger" onClick={() => setMenuOpen(!menuOpen)}>
-          <span /><span /><span />
+        <button className="burger" onClick={() => setMenuOpen(v => !v)}>
+          <span className={menuOpen ? "rot45" : ""} />
+          <span className={menuOpen ? "hide" : ""} />
+          <span className={menuOpen ? "rot-45" : ""} />
         </button>
       </nav>
 
-      {/* GUIDE GIRL */}
-      {guideVisible && (
-        <div className={`guide ${guidePop ? "guide--pop" : ""}`}>
-          <div className="guide__bubble">
-            <p>{guideMessages[activeSection]}</p>
-          </div>
-          <div className="guide__figure">
-            <div className="guide__head">
-              <div className="guide__face">
-                <span className="guide__eyes">👀</span>
-              </div>
-              <div className="guide__hair" />
-            </div>
-            <div className="guide__body">
-              <div className="guide__arm guide__arm--left" />
-              <div className="guide__torso" />
-              <div className="guide__arm guide__arm--right" />
-            </div>
-            <div className="guide__legs">
-              <div className="guide__leg" />
-              <div className="guide__leg" />
-            </div>
-          </div>
-          <button className="guide__close" onClick={() => setGuideVisible(false)}>×</button>
-        </div>
-      )}
-      {!guideVisible && (
-        <button className="guide__reopen" onClick={() => setGuideVisible(true)}>
-          <span>👩‍💼</span>
-        </button>
-      )}
+      {/* ── HERO ── */}
+      <section id="home" ref={el => { sectionRefs.current.home = el; }} className="hero">
+        <div className="hero__parallax" style={{ backgroundImage: `url(${HERO_IMG})`, transform: `scale(1.15) translateY(${scrollY * 0.3}px)` }} />
+        <div className="hero__vignette" />
+        <div className="hero__noise" />
 
-      {/* HERO */}
-      <section
-        id="home"
-        ref={(el) => { sectionRefs.current["home"] = el; }}
-        className="hero"
-      >
-        <div
-          className="hero__bg"
-          style={{ backgroundImage: `url(${HERO_IMG})`, transform: `translateY(${scrollY * 0.4}px)` }}
-        />
-        <div className="hero__overlay" />
+        {/* floating orbs */}
+        <div className="orb orb1" />
+        <div className="orb orb2" />
+        <div className="orb orb3" />
+
         <div className="hero__content">
-          <div className="hero__badge">Жемчужина Черноморья</div>
+          <p className="hero__eyebrow">Жемчужина Черноморья</p>
           <h1 className="hero__title">
-            <span className="hero__title-line">Открой</span>
-            <span className="hero__title-line hero__title-line--accent">Сочи</span>
+            <span className="hero__word hero__word--1">Открой</span>
+            <span className="hero__word hero__word--2">Сочи</span>
           </h1>
-          <p className="hero__subtitle">
-            Море, горы, солнце — всё в одном городе
-          </p>
-          <div className="hero__buttons">
-            <button className="btn-primary" onClick={() => scrollTo("attractions")}>
-              Исследовать
-            </button>
-            <button className="btn-outline" onClick={() => scrollTo("hotels")}>
-              Найти отель
-            </button>
+          <p className="hero__sub">Море · Горы · Субтропики · Олимпийское наследие</p>
+          <div className="hero__btns">
+            <button className="cta" onClick={() => scrollTo("attractions")}>Исследовать</button>
+            <button className="cta cta--ghost" onClick={() => scrollTo("hotels")}>Найти отель</button>
           </div>
         </div>
-        <div className="hero__scroll-hint" onClick={() => scrollTo("history")}>
-          <span>Листай вниз</span>
-          <Icon name="ChevronDown" size={20} />
-        </div>
+
         <div className="hero__stats">
-          <div className="hero__stat"><span className="hero__stat-num">+300</span><span>дней солнца</span></div>
-          <div className="hero__stat"><span className="hero__stat-num">2900м</span><span>высота гор</span></div>
-          <div className="hero__stat"><span className="hero__stat-num">118км</span><span>пляжей</span></div>
+          {[["300+", "дней солнца"], ["2900", "метров в горах"], ["118", "км пляжей"]].map(([n, l]) => (
+            <div key={l} className="hero__stat">
+              <span className="hero__stat-n">{n}</span>
+              <span className="hero__stat-l">{l}</span>
+            </div>
+          ))}
         </div>
+
+        <button className="scroll-hint" onClick={() => scrollTo("history")}>
+          <span>Прокрути вниз</span>
+          <Icon name="ChevronDown" size={18} />
+        </button>
       </section>
 
-      {/* HISTORY */}
-      <section
-        id="history"
-        ref={(el) => { sectionRefs.current["history"] = el; }}
-        className="section section--history"
-      >
-        <div className="section__container">
-          <div className="section__header">
-            <span className="section__tag">С 1838 года</span>
-            <h2 className="section__title">История Сочи</h2>
-            <p className="section__subtitle">От казачьего форта до олимпийской столицы</p>
+      {/* ── HISTORY ── */}
+      <section id="history" ref={el => { sectionRefs.current.history = el; }} className="section s-history">
+        <div className="wrap">
+          <div className="s-head">
+            <span className="pill">С 1838 года</span>
+            <h2>История Сочи</h2>
+            <p>От казачьего форта до олимпийской столицы мира</p>
           </div>
-          <div className="history__timeline">
-            {historyFacts.map((fact, i) => (
-              <div key={i} className={`history__item ${i % 2 === 0 ? "history__item--left" : "history__item--right"}`}>
-                <div className="history__year">{fact.year}</div>
-                <div className="history__dot" />
-                <div className="history__card">
-                  <p>{fact.event}</p>
+
+          <div className="timeline">
+            <div className="timeline__line" />
+            {historyList.map((f, i) => (
+              <div key={i} className={`tl-item ${i % 2 === 0 ? "tl-item--l" : "tl-item--r"}`}>
+                <div className="tl-card">
+                  <span className="tl-card__year">{f.year}</span>
+                  <span className="tl-card__label">{f.label}</span>
+                  <p className="tl-card__text">{f.event}</p>
                 </div>
+                <div className="tl-dot" />
               </div>
             ))}
           </div>
-          <div className="history__extra">
-            <div className="history__extra-card">
-              <div className="history__extra-icon">🌊</div>
-              <h3>Субтропический климат</h3>
-              <p>Сочи — единственный в России город с настоящим субтропическим климатом. Здесь растут пальмы, бамбук и магнолии.</p>
-            </div>
-            <div className="history__extra-card">
-              <div className="history__extra-icon">🏛️</div>
-              <h3>Культурное наследие</h3>
-              <p>Санатории сталинской эпохи, дача Сталина, дендрарий — уникальное архитектурное наследие разных эпох.</p>
-            </div>
-            <div className="history__extra-card">
-              <div className="history__extra-icon">🎿</div>
-              <h3>Олимпийское наследие</h3>
-              <p>После Олимпиады-2014 Сочи стал курортом мирового уровня с развитой инфраструктурой и горными курортами.</p>
-            </div>
+
+          <div className="history-facts">
+            {[
+              { icon: "🌴", title: "Субтропики", text: "Единственный в России субтропический климат — пальмы, бамбук и магнолии в открытом грунте." },
+              { icon: "🏛️", title: "Архитектура эпох", text: "Сталинский ампир, советский модернизм и ультрасовременные олимпийские объекты под одним небом." },
+              { icon: "🥇", title: "Олимпийское наследие", text: "После 2014 года город превратился в курорт мирового уровня с горными и прибрежными кластерами." },
+            ].map(f => (
+              <div key={f.title} className="fact-card">
+                <span className="fact-card__icon">{f.icon}</span>
+                <h3>{f.title}</h3>
+                <p>{f.text}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* HOTELS */}
-      <section
-        id="hotels"
-        ref={(el) => { sectionRefs.current["hotels"] = el; }}
-        className="section section--hotels"
-      >
-        <div className="section__container">
-          <div className="section__header">
-            <span className="section__tag">Лучшие отели</span>
-            <h2 className="section__title">Где остановиться</h2>
-            <p className="section__subtitle">От уютных бутик-отелей до роскошных курортов</p>
+      {/* ── HOTELS ── */}
+      <section id="hotels" ref={el => { sectionRefs.current.hotels = el; }} className="section s-hotels">
+        <div className="wrap">
+          <div className="s-head">
+            <span className="pill">Лучшие отели</span>
+            <h2>Где остановиться</h2>
+            <p>Роскошные курорты и уютные бутик-отели</p>
           </div>
-          <div className="hotels__grid">
-            {hotels.map((hotel, i) => (
-              <div key={i} className="hotel-card">
-                <div className="hotel-card__img-wrap">
-                  <img src={hotel.img} alt={hotel.name} className="hotel-card__img" />
-                  <span className="hotel-card__tag">{hotel.tag}</span>
+          <div className="hotels-grid">
+            {hotelsList.map((h, i) => (
+              <div key={i} className="h-card">
+                <div className="h-card__img-wrap">
+                  <img src={h.img} alt={h.name} />
+                  <span className="h-card__badge">{h.tag}</span>
+                  <div className="h-card__shine" />
                 </div>
-                <div className="hotel-card__body">
-                  <div className="hotel-card__stars">{"★".repeat(hotel.stars)}</div>
-                  <h3 className="hotel-card__name">{hotel.name}</h3>
-                  <p className="hotel-card__desc">{hotel.desc}</p>
-                  <div className="hotel-card__footer">
-                    <span className="hotel-card__price">{hotel.price}</span>
-                    <button className="hotel-card__btn">Подробнее</button>
+                <div className="h-card__body">
+                  <div className="h-card__stars">{"★".repeat(h.stars)}<span>{"★".repeat(5 - h.stars)}</span></div>
+                  <h3>{h.name}</h3>
+                  <p>{h.desc}</p>
+                  <div className="h-card__footer">
+                    <span className="h-card__price">{h.price}<small>/ночь</small></span>
+                    <button className="h-card__btn">Подробнее →</button>
                   </div>
                 </div>
               </div>
@@ -356,201 +235,173 @@ export default function Index() {
         </div>
       </section>
 
-      {/* ATTRACTIONS */}
-      <section
-        id="attractions"
-        ref={(el) => { sectionRefs.current["attractions"] = el; }}
-        className="section section--attractions"
-      >
-        <div className="section__container">
-          <div className="section__header">
-            <span className="section__tag">Что посмотреть</span>
-            <h2 className="section__title">Достопримечательности</h2>
-            <p className="section__subtitle">6 мест, которые нельзя пропустить</p>
+      {/* ── ATTRACTIONS ── */}
+      <section id="attractions" ref={el => { sectionRefs.current.attractions = el; }} className="section s-attr">
+        <div className="wrap">
+          <div className="s-head">
+            <span className="pill">Что посмотреть</span>
+            <h2>Достопримечательности</h2>
+            <p>Шесть мест, которые покорят с первого взгляда</p>
           </div>
-          <div className="attractions__grid">
-            {attractions.map((a, i) => (
-              <div key={i} className={`attraction-card bg-gradient-to-br ${a.color}`}>
-                <span className="attraction-card__emoji">{a.emoji}</span>
-                <h3 className="attraction-card__name">{a.name}</h3>
-                <p className="attraction-card__desc">{a.desc}</p>
+          <div className="attr-grid">
+            {attractionsList.map((a, i) => (
+              <div key={i} className="a-card" style={{ background: a.grad }}>
+                <div className="a-card__glow" />
+                <span className="a-card__emoji">{a.emoji}</span>
+                <h3>{a.name}</h3>
+                <p>{a.desc}</p>
               </div>
             ))}
           </div>
-          <div className="attractions__banner">
-            <img src={MOUNTAIN_IMG} alt="Роза Хутор" className="attractions__banner-img" />
-            <div className="attractions__banner-content">
+
+          <div className="attr-banner">
+            <img src={MOUNTAIN_IMG} alt="Роза Хутор" />
+            <div className="attr-banner__overlay" />
+            <div className="attr-banner__content">
+              <span className="pill pill--light">Жемчужина курорта</span>
               <h3>Роза Хутор</h3>
               <p>Горнолыжный курорт мирового уровня в 40 км от Сочи. 102 км трасс, перепад высот 1760 м. Работает круглогодично.</p>
-              <button className="btn-primary">Узнать больше</button>
+              <button className="cta cta--sm">Подробнее</button>
             </div>
           </div>
         </div>
       </section>
 
-      {/* WEATHER */}
-      <section
-        id="weather"
-        ref={(el) => { sectionRefs.current["weather"] = el; }}
-        className="section section--weather"
-      >
-        <div className="section__container">
-          <div className="section__header">
-            <span className="section__tag">Актуально</span>
-            <h2 className="section__title">Погода в Сочи</h2>
-            <p className="section__subtitle">Обновляется в реальном времени</p>
+      {/* ── WEATHER ── */}
+      <section id="weather" ref={el => { sectionRefs.current.weather = el; }} className="section s-weather">
+        <div className="wrap">
+          <div className="s-head">
+            <span className="pill">Live</span>
+            <h2>Погода в Сочи</h2>
+            <p>Актуальные данные обновляются при открытии раздела</p>
           </div>
-          <div className="weather__card">
+
+          <div className="weather-box">
             {weatherLoading && (
-              <div className="weather__loading">
-                <div className="weather__spinner" />
-                <p>Загружаю данные...</p>
+              <div className="weather-loader">
+                <div className="weather-loader__ring" />
+                <p>Получаю данные...</p>
               </div>
             )}
             {!weatherLoading && !weather && (
-              <button className="btn-primary" onClick={fetchWeather}>
-                Узнать погоду
-              </button>
+              <button className="cta" onClick={fetchWeather}>Узнать погоду</button>
             )}
-            {weather && !weatherLoading && (
-              <div className="weather__data">
-                <div className="weather__main">
-                  <span className="weather__emoji">{getWeatherEmoji(weather.icon)}</span>
-                  <div className="weather__temp-wrap">
-                    <span className="weather__temp">{weather.temp}°</span>
-                    <span className="weather__desc">{weather.description}</span>
+            {!weatherLoading && weather && (
+              <div className="weather-data">
+                <div className="weather-data__left">
+                  <span className="weather-data__emoji">{getWeatherEmoji(weather.icon)}</span>
+                  <div>
+                    <div className="weather-data__temp">{weather.temp}°C</div>
+                    <div className="weather-data__desc">{weather.description}</div>
+                    <div className="weather-data__city">г. Сочи</div>
                   </div>
                 </div>
-                <div className="weather__details">
-                  <div className="weather__detail">
-                    <Icon name="Thermometer" size={20} />
-                    <span>Ощущается как {weather.feels_like}°</span>
+                <div className="weather-data__right">
+                  <div className="weather-param">
+                    <Icon name="Thermometer" size={18} />
+                    <span>Ощущается</span>
+                    <strong>{weather.feels_like}°</strong>
                   </div>
-                  <div className="weather__detail">
-                    <Icon name="Droplets" size={20} />
-                    <span>Влажность {weather.humidity}%</span>
+                  <div className="weather-param">
+                    <Icon name="Droplets" size={18} />
+                    <span>Влажность</span>
+                    <strong>{weather.humidity}%</strong>
                   </div>
-                  <div className="weather__detail">
-                    <Icon name="Wind" size={20} />
-                    <span>Ветер {weather.wind_speed} м/с</span>
+                  <div className="weather-param">
+                    <Icon name="Wind" size={18} />
+                    <span>Ветер</span>
+                    <strong>{weather.wind_speed} м/с</strong>
                   </div>
+                  <button className="weather-refresh" onClick={fetchWeather}>
+                    <Icon name="RefreshCw" size={14} /> Обновить
+                  </button>
                 </div>
-                {weather.mock && (
-                  <p className="weather__mock-note">* Тестовые данные. Добавьте API-ключ для реальной погоды</p>
-                )}
-                <button className="weather__refresh" onClick={fetchWeather}>
-                  <Icon name="RefreshCw" size={16} />
-                  Обновить
-                </button>
+                {weather.mock && <p className="weather-mock">* Демо-данные. Добавьте API-ключ OpenWeatherMap для реальной погоды.</p>}
               </div>
             )}
           </div>
-          <div className="weather__seasons">
+
+          <div className="seasons">
             {[
-              { season: "Зима", temp: "+8°", icon: "❄️", desc: "Горнолыжный сезон на Розе Хутор" },
-              { season: "Весна", temp: "+18°", icon: "🌸", desc: "Цветение и первые купания" },
-              { season: "Лето", temp: "+28°", icon: "☀️", desc: "Пляжный сезон, тёплое море" },
-              { season: "Осень", temp: "+20°", icon: "🍂", desc: "Бархатный сезон, минус туристов" },
-            ].map((s, i) => (
-              <div key={i} className="weather__season">
-                <span className="weather__season-icon">{s.icon}</span>
-                <span className="weather__season-name">{s.season}</span>
-                <span className="weather__season-temp">{s.temp}</span>
-                <span className="weather__season-desc">{s.desc}</span>
+              { s: "Зима", t: "+8°", e: "❄️", d: "Горнолыжный сезон" },
+              { s: "Весна", t: "+18°", e: "🌸", d: "Цветение садов" },
+              { s: "Лето", t: "+28°", e: "☀️", d: "Пляжный сезон" },
+              { s: "Осень", t: "+20°", e: "🍂", d: "Бархатный сезон" },
+            ].map(item => (
+              <div key={item.s} className="season-card">
+                <span className="season-card__icon">{item.e}</span>
+                <strong>{item.s}</strong>
+                <span className="season-card__temp">{item.t}</span>
+                <p>{item.d}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* CONTACTS */}
-      <section
-        id="contacts"
-        ref={(el) => { sectionRefs.current["contacts"] = el; }}
-        className="section section--contacts"
-      >
-        <div className="section__container">
-          <div className="section__header">
-            <span className="section__tag">Свяжитесь с нами</span>
-            <h2 className="section__title">Контакты</h2>
-            <p className="section__subtitle">Планируете поездку? Мы поможем!</p>
+      {/* ── CONTACTS ── */}
+      <section id="contacts" ref={el => { sectionRefs.current.contacts = el; }} className="section s-contacts">
+        <div className="wrap">
+          <div className="s-head">
+            <span className="pill">Контакты</span>
+            <h2>Планируете поездку?</h2>
+            <p>Мы поможем организовать незабываемый отдых</p>
           </div>
-          <div className="contacts__grid">
-            <div className="contacts__info">
-              <div className="contact-item">
-                <div className="contact-item__icon"><Icon name="MapPin" size={22} /></div>
-                <div>
-                  <h4>Адрес</h4>
-                  <p>г. Сочи, ул. Навагинская, 16</p>
+          <div className="contacts-grid">
+            <div className="contacts-info">
+              {[
+                { icon: "MapPin" as const, title: "Адрес", val: "г. Сочи, ул. Навагинская, 16" },
+                { icon: "Phone" as const, title: "Телефон", val: "+7 (862) 264-00-00" },
+                { icon: "Mail" as const, title: "Email", val: "hello@sochi-guide.ru" },
+                { icon: "Clock" as const, title: "Часы работы", val: "Ежедневно 9:00 — 21:00" },
+              ].map(c => (
+                <div key={c.title} className="c-item">
+                  <div className="c-item__icon"><Icon name={c.icon} size={20} /></div>
+                  <div>
+                    <span>{c.title}</span>
+                    <strong>{c.val}</strong>
+                  </div>
                 </div>
-              </div>
-              <div className="contact-item">
-                <div className="contact-item__icon"><Icon name="Phone" size={22} /></div>
-                <div>
-                  <h4>Телефон</h4>
-                  <p>+7 (862) 264-00-00</p>
-                </div>
-              </div>
-              <div className="contact-item">
-                <div className="contact-item__icon"><Icon name="Mail" size={22} /></div>
-                <div>
-                  <h4>Email</h4>
-                  <p>hello@sochi-guide.ru</p>
-                </div>
-              </div>
-              <div className="contact-item">
-                <div className="contact-item__icon"><Icon name="Clock" size={22} /></div>
-                <div>
-                  <h4>Режим работы</h4>
-                  <p>Ежедневно, 9:00 — 21:00</p>
-                </div>
-              </div>
+              ))}
             </div>
-            <form className="contacts__form" onSubmit={(e) => e.preventDefault()}>
+
+            <form className="contacts-form" onSubmit={handleSend}>
               <h3>Написать нам</h3>
-              <input
-                type="text"
-                placeholder="Ваше имя"
-                className="contacts__input"
-                value={contactForm.name}
-                onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
-              />
-              <input
-                type="email"
-                placeholder="Email"
-                className="contacts__input"
-                value={contactForm.email}
-                onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })}
-              />
-              <textarea
-                placeholder="Ваше сообщение..."
-                className="contacts__textarea"
-                rows={4}
-                value={contactForm.message}
-                onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })}
-              />
-              <button type="submit" className="btn-primary" style={{ width: "100%" }}>
-                Отправить сообщение
-              </button>
+              {sent ? (
+                <div className="form-success">
+                  <span>✅</span>
+                  <p>Сообщение отправлено! Свяжемся с вами в течение часа.</p>
+                </div>
+              ) : (
+                <>
+                  <input required placeholder="Ваше имя" value={contactForm.name}
+                    onChange={e => setContactForm(p => ({ ...p, name: e.target.value }))} />
+                  <input required type="email" placeholder="Email" value={contactForm.email}
+                    onChange={e => setContactForm(p => ({ ...p, email: e.target.value }))} />
+                  <textarea required rows={4} placeholder="Расскажите о вашей поездке..." value={contactForm.message}
+                    onChange={e => setContactForm(p => ({ ...p, message: e.target.value }))} />
+                  <button type="submit" className="cta" style={{ width: "100%" }}>Отправить</button>
+                </>
+              )}
             </form>
           </div>
         </div>
       </section>
 
-      {/* FOOTER */}
+      {/* ── FOOTER ── */}
       <footer className="footer">
-        <div className="footer__content">
-          <div className="footer__logo">СОЧИ<span>●</span></div>
-          <p className="footer__copy">© 2024 Сочи — жемчужина Черноморья. Все права защищены.</p>
-          <div className="footer__links">
-            {sections.slice(0, 4).map((s) => (
-              <button key={s} onClick={() => scrollTo(s)} className="footer__link">
-                {sectionLabels[s]}
-              </button>
-            ))}
+        <div className="footer__inner">
+          <div className="footer__brand">
+            <span>СОЧИ</span>
+            <p>Жемчужина Черноморья</p>
           </div>
+          <nav className="footer__nav">
+            {sections.map(s => <button key={s} onClick={() => scrollTo(s)}>{sectionLabels[s]}</button>)}
+          </nav>
+          <p className="footer__copy">© 2025 Сочи-Гид. Все права защищены.</p>
         </div>
       </footer>
+
     </div>
   );
 }
